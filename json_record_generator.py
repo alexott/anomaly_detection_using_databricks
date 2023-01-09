@@ -1,4 +1,16 @@
 # Databricks notebook source
+dbutils.widgets.text("minutes_run", "2", "Minutes to run")
+dbutils.widgets.text("dest_dir", "/tmp/dlt-anomaly-demo/transaction_landing_dir", "Destination directory")
+dbutils.widgets.text("input_data", "/tmp/dlt-anomaly-demo/original-data/creditcard.csv", "Path to creditcard.csv")
+
+# COMMAND ----------
+
+minutes = int(dbutils.widgets.get("minutes_run"))
+json_landing = dbutils.widgets.get("dest_dir")
+file_location = dbutils.widgets.get("input_data")
+
+# COMMAND ----------
+
 import pandas as pd
 
 # COMMAND ----------
@@ -9,7 +21,7 @@ import pandas as pd
 
 # COMMAND ----------
 
-file_location = "dbfs:/FileStore/tables/creditcard.csv"
+
 file_type = 'csv'
 
 # CSV options
@@ -26,8 +38,6 @@ df = spark.read.format(file_type) \
   .option("sep", delimiter) \
   .load(file_location).toPandas()
 
-
-
 # COMMAND ----------
 
 # MAGIC %md
@@ -37,15 +47,8 @@ df = spark.read.format(file_type) \
 
 df.reset_index(inplace=True)
 df.rename(columns={'index':'cust_id'}, inplace=True)
-df.drop(columns=df.columns[-1], 
-        axis=1, 
-        inplace=True)
-
-df.drop(columns=df.columns[-1], 
-        axis=1, 
-        inplace=True)
-
-display(df)
+df.drop(columns=df.columns[-1], axis=1, inplace=True)
+#display(df)
 
 # COMMAND ----------
 
@@ -55,12 +58,7 @@ display(df)
 # COMMAND ----------
 
 #Do a streaming read then a streaming write 
-json_landing = "/FileStore/tables/transaction_json_landing"
 dbutils.fs.mkdirs(json_landing)
-
-# COMMAND ----------
-
-# MAGIC %fs rm -r "/FileStore/tables/transaction_json_landing"
 
 # COMMAND ----------
 
@@ -69,18 +67,33 @@ dbutils.fs.mkdirs(json_landing)
 
 # COMMAND ----------
 
-import time 
-import random 
-
-i = 0
-for json_dict in df.to_dict(orient='records'):
-  dbutils.fs.put("{}/row{}.json".format(json_landing,i), str(json_dict))
-  i += 1 
-  #time.sleep(random.random())
-
+#Parametrize this at the notebook level with a widget so it ...
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC %fs
-# MAGIC rm -r "/FileStore/tables/sensor_json_landing"
+#Add timestamp for the time in which this was generated, but for the sake of calling out for it 
+
+# COMMAND ----------
+
+import time 
+import random
+from datetime import datetime
+
+should_run = True
+start_time = datetime.utcnow()
+while should_run:
+  i = 0
+  for json_dict in df.to_dict(orient='records'):
+    utcnow = datetime.utcnow()
+    utcnow_str = utcnow.isoformat() + "Z"
+    json_dict['timestamp'] = utcnow_str
+    dbutils.fs.put(f"{json_landing}/{utcnow_str}-row{i}.json", str(json_dict))
+    i += 1
+    if (utcnow - start_time).seconds > (minutes*60):
+      print(f"Existing after {minutes} minutes")
+      should_run = False
+      break
+
+# COMMAND ----------
+
+#%fs rm -r "/tmp/dlt-anomaly-demo/transaction_landing_dir"
