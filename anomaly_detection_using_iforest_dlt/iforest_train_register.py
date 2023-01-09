@@ -1,4 +1,14 @@
 # Databricks notebook source
+dbutils.widgets.text("model_name", 'aott_iforest', "ML model name")
+dbutils.widgets.text("input_data", '/tmp/dlt-anomaly-demo/original-data/creditcard.csv', "Path to creditcard.csv")
+
+# COMMAND ----------
+
+model_name = dbutils.widgets.get("model_name")
+input_data = dbutils.widgets.get("input_data")
+
+# COMMAND ----------
+
 # MAGIC %md
 # MAGIC Import the necessary packages
 
@@ -17,16 +27,12 @@ from mlflow.models.signature import infer_signature
 
 # COMMAND ----------
 
-model_name = 'aott_iforest'
-
-# COMMAND ----------
-
 # MAGIC %md
 # MAGIC Read the data into a spark dataframe
 
 # COMMAND ----------
 
-df = spark.read.csv("/tmp/dlt-anomaly-demo/original-data/creditcard.csv", inferSchema=True, header=True)
+df = spark.read.csv(input_data, inferSchema=True, header=True)
 
 # COMMAND ----------
 

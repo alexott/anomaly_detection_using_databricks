@@ -7,7 +7,7 @@
 CREATE OR REFRESH STREAMING LIVE TABLE transactions_raw
 COMMENT "The raw transaction readings, ingested from /tmp/dlt-anomaly-demo/transaction_landing_dir"
 TBLPROPERTIES ("quality" = "bronze")
-AS SELECT * FROM cloud_files("/tmp/dlt-anomaly-demo/transaction_landing_dir", "json", map("cloudFiles.inferColumnTypes", "true"))
+AS SELECT * FROM cloud_files("${landing_directory}", "json", map("cloudFiles.inferColumnTypes", "true"))
 
 -- COMMAND ----------
 
