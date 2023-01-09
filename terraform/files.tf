@@ -3,7 +3,7 @@ resource "databricks_dbfs_file" "creditcard" {
   path   = var.cc_data_path
 }
 
-resource "databricks_dbfs_file" "empty" {
-  source = "${path.module}/empty"
-  path   = "${var.landing_dir}/empty"
+resource "databricks_dbfs_file" "initial" {
+  source = "${path.module}/initial"
+  path   = "${var.landing_dir}/initial"
 }

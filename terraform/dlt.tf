@@ -1,6 +1,6 @@
 resource "databricks_pipeline" "this" {
   name    = "Anomaly Detection Demo (${data.databricks_current_user.me.alphanumeric})"
-  depends_on = [databricks_dbfs_file.empty]
+  depends_on = [databricks_dbfs_file.initial]
 
   configuration = {
     "anomaly_detect_model_name": var.model_name,
@@ -11,15 +11,15 @@ resource "databricks_pipeline" "this" {
 
   library {
     notebook {
-      path = "${local.base_path}/anomaly_detection_using_iforest_dlt/dlt_task_0_iforest_dlt_udf"
+      path = "${local.base_path}/dlt_task_0_iforest_dlt_udf"
     }
   }
   library {
     notebook {
-      path = "${local.base_path}/anomaly_detection_using_iforest_dlt/dlt_task_1_anomaly_detector"
+      path = "${local.base_path}/dlt_task_1_anomaly_detector"
     }
   }
 
-  continuous = true
+  continuous = false
   development = true
 }

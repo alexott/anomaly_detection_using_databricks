@@ -1,6 +1,6 @@
 resource "databricks_job" "this" {
   name = "Anomaly Detection Demo (${data.databricks_current_user.me.alphanumeric})"
-  depends_on = [databricks_dbfs_file.creditcard, databricks_dbfs_file.empty]
+  depends_on = [databricks_dbfs_file.creditcard, databricks_dbfs_file.initial]
 
   task {
     task_key = "generate_data"
@@ -22,7 +22,7 @@ resource "databricks_job" "this" {
     }
 
     notebook_task {
-      notebook_path = "${local.base_path}/anomaly_detection_using_iforest_dlt/json_record_generator"
+      notebook_path = "${local.base_path}/json_record_generator"
       base_parameters = {
         "minutes_run": "40",
         "dest_dir": var.landing_dir,
