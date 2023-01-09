@@ -9,7 +9,7 @@ import pandas as pd
 
 # COMMAND ----------
 
-file_location = "dbfs:/FileStore/tables/creditcard.csv"
+file_location = "/tmp/dlt-anomaly-demo/original-data/creditcard.csv"
 file_type = 'csv'
 
 # CSV options
@@ -26,8 +26,6 @@ df = spark.read.format(file_type) \
   .option("sep", delimiter) \
   .load(file_location).toPandas()
 
-
-
 # COMMAND ----------
 
 # MAGIC %md
@@ -41,7 +39,6 @@ df.drop(columns=df.columns[-1],
         axis=1, 
         inplace=True)
 
-
 display(df)
 
 # COMMAND ----------
@@ -52,7 +49,7 @@ display(df)
 # COMMAND ----------
 
 #Do a streaming read then a streaming write 
-json_landing = "/FileStore/tables/transaction_landing_dir"
+json_landing = "/tmp/dlt-anomaly-demo/transaction_landing_dir"
 dbutils.fs.mkdirs(json_landing)
 
 # COMMAND ----------
@@ -71,17 +68,17 @@ dbutils.fs.mkdirs(json_landing)
 # COMMAND ----------
 
 import time 
-import random 
+import random
+from datetime import datetime
 
 i = 0
+base_name = datetime.utcnow().isoformat()
 for json_dict in df.to_dict(orient='records'):
-  dbutils.fs.put("{}/row{}.json".format(json_landing,i), str(json_dict))
+  json_dict['timestamp'] = datetime.utcnow().isoformat() + "Z"
+  dbutils.fs.put(f"{json_landing}/{base_name}-row{i}.json", str(json_dict))
   i += 1 
-  #time.sleep(random.random())
-
+  # time.sleep(random.random())
 
 # COMMAND ----------
 
-# MAGIC %md
-# MAGIC %fs
-# MAGIC rm -r "/FileStore/tables/sensor_json_landing"
+#%fs rm -r "/tmp/dlt-anomaly-demo/transaction_landing_dir"

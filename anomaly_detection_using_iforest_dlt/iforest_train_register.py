@@ -15,6 +15,9 @@ from pyspark.sql.functions import col
 from sklearn.ensemble import IsolationForest
 from mlflow.models.signature import infer_signature
 
+# COMMAND ----------
+
+model_name = 'aott_iforest'
 
 # COMMAND ----------
 
@@ -23,7 +26,7 @@ from mlflow.models.signature import infer_signature
 
 # COMMAND ----------
 
-df = spark.read.csv("s3://sagang-public/creditcard.csv", inferSchema=True, header=True)
+df = spark.read.csv("/tmp/dlt-anomaly-demo/original-data/creditcard.csv", inferSchema=True, header=True)
 
 # COMMAND ----------
 
@@ -71,9 +74,9 @@ y_test = test["Class"]
 
 # COMMAND ----------
 
-def train_model(mlFlowClient, loaded_model, model_name, run_name)->str:
+def train_model(mlFlowClient, loaded_model, model_name)->str:
   "trains, logs, registers and promotes the model to production. Returns the URI of the model in prod"
-  with mlflow.start_run(run_name=run_name) as run:
+  with mlflow.start_run() as run:
     loaded_model.fit(X_train)
     y_train_predict = loaded_model.predict(X_train)
     signature = infer_signature(X_train, y_train_predict)
@@ -86,31 +89,23 @@ def train_model(mlFlowClient, loaded_model, model_name, run_name)->str:
 
 # COMMAND ----------
 
-model_version = client.get_latest_versions(model_name,stages=['None'])[0].version
-print(model_version)
-
-# COMMAND ----------
-
-model_name = 'iforest_avi'
-runName = 'avi_iforest_model'
-
-# COMMAND ----------
-
 import mlflow
 client = mlflow.tracking.MlflowClient()
 
+# COMMAND ----------
+
+# isolation_forest = IsolationForest(n_jobs=-1, warm_start=True, random_state=42)
+# train_model(client, isolation_forest, model_name)
 
 # COMMAND ----------
 
 try:
   latest_model = client.get_latest_versions(model_name, stages=["Production"])[0].source
   loaded_model = mlflow.sklearn.load_model(latest_model)
-  trained_model_uri = train_model(client, loaded_model, model_name, runName)
-  
+  trained_model_uri = train_model(client, loaded_model, model_name)
 except :
   isolation_forest = IsolationForest(n_jobs=-1, warm_start=True, random_state=42)
-  trained_model_uri = train_model(client, isolation_forest, model_name, runName)
-  
+  trained_model_uri = train_model(client, isolation_forest, model_name)  
 
 # COMMAND ----------
 
@@ -146,3 +141,7 @@ sp_df.createOrReplaceTempView('sp_df')
 display(spark.sql("""SELECT detect_anomaly(*)
 AS not_anomalous
 FROM sp_df"""))
+
+# COMMAND ----------
+
+

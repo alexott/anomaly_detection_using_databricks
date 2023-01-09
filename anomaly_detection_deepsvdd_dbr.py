@@ -1,6 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyod
-# MAGIC %pip install rich
+# MAGIC %pip install pyod rich
 
 # COMMAND ----------
 

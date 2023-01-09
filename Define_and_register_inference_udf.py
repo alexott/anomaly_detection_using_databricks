@@ -1,8 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install mlflow
-# MAGIC %pip install tensorflow
-# MAGIC %pip install pyod
-# MAGIC %pip install rich
+# MAGIC %pip install mlflow tensorflow pyod rich
 
 # COMMAND ----------
 
