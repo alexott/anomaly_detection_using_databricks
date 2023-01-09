@@ -96,4 +96,4 @@ while should_run:
 
 # COMMAND ----------
 
-#%fs rm -r "/tmp/dlt-anomaly-demo/transaction_landing_dir"
+# dbutils.fs.rm(json_landing, True)
