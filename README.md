@@ -1,4 +1,6 @@
-This demo uses the [kaggle CC dataset](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud) to show it can be applied for anomaly detection. The specific components used are
+This demo is based on the [original anomaly detection](https://github.com/sathishgang-db/anomaly_detection_using_databricks) accomplishing the [Near Real-Time Anomaly Detection with Delta Live Tables and Databricks Machine Learning](https://www.databricks.com/blog/2022/08/08/near-real-time-anomaly-detection-with-delta-live-tables-and-databricks-machine-learning.html) blog post.
+
+It uses the [kaggle CC dataset](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud) to show it can be applied for anomaly detection. The specific components used are
 
     -> The DBR ML runtime (tested with DBR 11.3)
     -> DBR managed MLFlow
