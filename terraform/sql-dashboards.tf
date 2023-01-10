@@ -1,4 +1,4 @@
-resource "databricks_sql_dashboard" "anomaly_detection_demo_f498dd57_32e5_46ce_b711_93a9798e2db7" {
+resource "databricks_sql_dashboard" "anomaly_detection_demo" {
   name = "Anomaly Detection Demo (${data.databricks_current_user.me.alphanumeric})"
 }
 resource "databricks_sql_visualization" "bar_1_4019117c_605d_42e5_bed8_a3281c960a84e6b89111_5d47_4a75_bca4_cf6607018a9c" {
@@ -17,14 +17,14 @@ resource "databricks_sql_visualization" "bar_1_7f825327_96e7_4400_b012_8c34758d8
 }
 resource "databricks_sql_widget" "f498dd57_32e5_46ce_b711_93a9798e2db707ff4b1b_f293_41d2_9779_d6ecea743885" {
   visualization_id = databricks_sql_visualization.bar_1_7f825327_96e7_4400_b012_8c34758d8d0e2e9b6cd7_7fb9_4886_8e45_4bb37ac139d8.visualization_id
-  title            = "Transactions per Minute (last 24 hours)"
+  title            = "Transactions count (last 24 hours)"
   position {
     size_y = 8
     size_x = 3
     pos_y  = 8
     pos_x  = 3
   }
-  dashboard_id = databricks_sql_dashboard.anomaly_detection_demo_f498dd57_32e5_46ce_b711_93a9798e2db7.id
+  dashboard_id = databricks_sql_dashboard.anomaly_detection_demo.id
 }
 resource "databricks_sql_widget" "f498dd57_32e5_46ce_b711_93a9798e2db738a3a1f5_46a0_4aea_ac14_ed2f8c58963a" {
   visualization_id = databricks_sql_visualization.pie_1_33ed24a9_798b_494e_951f_41432d7968e23e555494_49d2_4140_9f3a_8f27b07f0dc1.visualization_id
@@ -33,17 +33,17 @@ resource "databricks_sql_widget" "f498dd57_32e5_46ce_b711_93a9798e2db738a3a1f5_4
     size_y = 8
     size_x = 3
   }
-  dashboard_id = databricks_sql_dashboard.anomaly_detection_demo_f498dd57_32e5_46ce_b711_93a9798e2db7.id
+  dashboard_id = databricks_sql_dashboard.anomaly_detection_demo.id
 }
 resource "databricks_sql_widget" "f498dd57_32e5_46ce_b711_93a9798e2db766a9f48b_332f_428d_9646_9f34d8e85fbc" {
   visualization_id = databricks_sql_visualization.bar_1_4019117c_605d_42e5_bed8_a3281c960a84e6b89111_5d47_4a75_bca4_cf6607018a9c.visualization_id
-  title            = "Anomaly Detection: Over last 24 hours"
+  title            = "Anomaly Detections (last 24 hours)"
   position {
     size_y = 8
     size_x = 3
     pos_x  = 3
   }
-  dashboard_id = databricks_sql_dashboard.anomaly_detection_demo_f498dd57_32e5_46ce_b711_93a9798e2db7.id
+  dashboard_id = databricks_sql_dashboard.anomaly_detection_demo.id
 }
 resource "databricks_sql_visualization" "pie_1_33ed24a9_798b_494e_951f_41432d7968e23e555494_49d2_4140_9f3a_8f27b07f0dc1" {
   type       = "chart"

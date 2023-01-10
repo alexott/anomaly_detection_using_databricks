@@ -67,14 +67,6 @@ dbutils.fs.mkdirs(json_landing)
 
 # COMMAND ----------
 
-#Parametrize this at the notebook level with a widget so it ...
-
-# COMMAND ----------
-
-#Add timestamp for the time in which this was generated, but for the sake of calling out for it 
-
-# COMMAND ----------
-
 import time 
 import random
 from datetime import datetime
@@ -87,7 +79,7 @@ while should_run:
     utcnow = datetime.utcnow()
     utcnow_str = utcnow.isoformat() + "Z"
     json_dict['timestamp'] = utcnow_str
-    dbutils.fs.put(f"{json_landing}/{utcnow_str}-row{i}.json", str(json_dict))
+    dbutils.fs.put(f"{json_landing}/{utcnow_str.replace(':', '_')}-row{i}.json", str(json_dict))
     i += 1
     if (utcnow - start_time).seconds > (minutes*60):
       print(f"Existing after {minutes} minutes")

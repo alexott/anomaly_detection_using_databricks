@@ -1,5 +1,5 @@
 # Databricks notebook source
-dbutils.widgets.text("model_name", 'aott_iforest', "ML model name")
+dbutils.widgets.text("model_name", 'iforest', "ML model name")
 dbutils.widgets.text("input_data", '/tmp/dlt-anomaly-demo/original-data/creditcard.csv', "Path to creditcard.csv")
 
 # COMMAND ----------
@@ -100,11 +100,6 @@ client = mlflow.tracking.MlflowClient()
 
 # COMMAND ----------
 
-# isolation_forest = IsolationForest(n_jobs=-1, warm_start=True, random_state=42)
-# train_model(client, isolation_forest, model_name)
-
-# COMMAND ----------
-
 try:
   latest_model = client.get_latest_versions(model_name, stages=["Production"])[0].source
   loaded_model = mlflow.sklearn.load_model(latest_model)
@@ -147,7 +142,3 @@ sp_df.createOrReplaceTempView('sp_df')
 display(spark.sql("""SELECT detect_anomaly(*)
 AS not_anomalous
 FROM sp_df"""))
-
-# COMMAND ----------
-
-

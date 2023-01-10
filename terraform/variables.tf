@@ -7,7 +7,7 @@ variable "cc_data_path" {
 variable "model_name" {
   type        = string
   description = "Name of the anomaly detection model"
-  default     = "aott_iforest"
+  default     = "iforest"
 }
 
 variable "target_db_name" {
