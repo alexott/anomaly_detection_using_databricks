@@ -2,9 +2,9 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.terraform.io/databricks/databricks" {
-  version     = "1.7.0"
-  constraints = "1.7.0"
+  version     = "1.8.0"
+  constraints = "1.8.0"
   hashes = [
-    "h1:gVDLthcnZXAGi0RrlY1U2V9w6uaJk3Bour02IdRznLY=",
+    "h1:1psvjijAU2KLnKrSk7NRzJGHImCgA6i50ghAQwTximE=",
   ]
 }

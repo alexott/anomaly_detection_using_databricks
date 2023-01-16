@@ -52,3 +52,21 @@ resource "databricks_sql_visualization" "pie_1_33ed24a9_798b_494e_951f_41432d796
   options    = "{\"version\": 2, \"globalSeriesType\": \"pie\", \"sortX\": true, \"sortY\": true, \"legend\": {\"traceorder\": \"normal\"}, \"xAxis\": {\"type\": \"-\", \"labels\": {\"enabled\": true}}, \"yAxis\": [{\"type\": \"-\"}, {\"type\": \"-\", \"opposite\": true}], \"alignYAxesAtZero\": true, \"error_y\": {\"type\": \"data\", \"visible\": true}, \"series\": {\"stacking\": null, \"error_y\": {\"type\": \"data\", \"visible\": true}}, \"seriesOptions\": {\"column_b0eb2e0210089\": {\"name\": \"Anomalies detected\", \"yAxis\": 0, \"type\": \"pie\"}}, \"valuesOptions\": {}, \"direction\": {\"type\": \"counterclockwise\"}, \"sizemode\": \"diameter\", \"coefficient\": 1, \"numberFormat\": \"0,0[.]00000\", \"percentFormat\": \"0[.]00%\", \"textFormat\": \"\", \"missingValuesAsZero\": true, \"useAggregationsUi\": true, \"swappedAxes\": false, \"dateTimeFormat\": \"YYYY-MM-DD HH:mm\", \"showDataLabels\": true, \"columnConfigurationMap\": {\"x\": {\"column\": \"is_anomaly\", \"id\": \"column_b0eb2e0210088\"}, \"y\": [{\"column\": \"count\", \"transform\": \"SUM\", \"id\": \"column_b0eb2e0210089\"}]}, \"isAggregationOn\": true}"
   name       = "Pie 1"
 }
+
+resource "databricks_sql_visualization" "results_59dc477b_681c_4885_9301_309ffdc470cbdfbe0a7d_883b_485f_a925_e27b5bab6ea5" {
+  type     = "table"
+  query_id = databricks_sql_query.anomaly_detection_latest_anomalies_59dc477b_681c_4885_9301_309ffdc470cb.id
+  options  = "{\"version\": 2}"
+  name     = "Results"
+}
+
+resource "databricks_sql_widget" "d3a45295_eac2_4d87_82d8_f41346916146fae08d49_a96a_4a21_a472_9085a6848b6f" {
+  visualization_id = databricks_sql_visualization.results_59dc477b_681c_4885_9301_309ffdc470cbdfbe0a7d_883b_485f_a925_e27b5bab6ea5.visualization_id
+  title            = "Top 10 anomalies in the last 10 minutes"
+  position {
+    size_y = 8
+    size_x = 3
+    pos_y  = 8
+  }
+  dashboard_id = databricks_sql_dashboard.anomaly_detection_demo.id
+}

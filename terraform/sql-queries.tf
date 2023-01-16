@@ -13,3 +13,9 @@ resource "databricks_sql_query" "anomaly_detection_transactions_per_minute_7f825
   name           = "Anomaly Detection: Transactions per Minute (${data.databricks_current_user.me.alphanumeric})"
   data_source_id = databricks_sql_endpoint.demo_endpoint.data_source_id
 }
+
+resource "databricks_sql_query" "anomaly_detection_latest_anomalies_59dc477b_681c_4885_9301_309ffdc470cb" {
+  query          = "select cust_id, amount, timestamp \nfrom ${var.target_db_name}.predictions\nwhere is_anomaly and timestamp >= dateadd(MINUTE, -10, current_timestamp)\norder by timestamp desc, amount desc\nlimit 10\n"
+  name           = "Anomaly Detection: Latest anomalies (${data.databricks_current_user.me.alphanumeric})"
+  data_source_id = databricks_sql_endpoint.demo_endpoint.data_source_id
+}
